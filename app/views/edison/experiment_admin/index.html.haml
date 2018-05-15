@@ -1,0 +1,46 @@
+
+.container-fluid
+	.row
+		.col-xs-10
+			%ul.breadcrumb
+				%li
+					%a{ href: '/admin' }
+						Admin
+				%li
+					Experiemnts
+		.col-xs-2
+			
+	.row{ style: 'margin-top: 0' }
+		.col-xs-6
+			= raw paginate @experiments
+		.col-xs-6
+		
+
+	.row
+		.col-xs-12
+			- if @experiments.blank?
+				.well
+					%h3
+						No Experiments Found
+			- else
+
+				%table.table.table-light.table-bordered
+					%thead
+						%th
+							
+						%th
+
+
+					%tbody
+						- @experiments.each do |experiment|
+							%tr
+								%td
+									%a{ href: edit_experiment_admin_path( experiment ) }
+										= experiment.title
+								%td
+									= experiment.status
+
+								
+								
+								
+		

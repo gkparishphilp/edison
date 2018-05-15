@@ -1,6 +1,6 @@
 Edison::Engine.routes.draw do
 
-	resources 	:test_admin
+	resources 	:experiment_admin
 	resources	:variant_admin
 	
 end
