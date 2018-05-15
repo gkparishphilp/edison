@@ -19,6 +19,8 @@ Gem::Specification.new do |s|
   s.test_files = Dir["spec/**/*"]
 
   s.add_dependency "rails", "~> 5.1.6"
+  s.add_dependency "swell_media"
+  s.add_dependency "bunyan"
 
   s.add_development_dependency "sqlite3"
 end

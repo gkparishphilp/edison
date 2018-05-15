@@ -1,0 +1,53 @@
+
+
+.container-fluid
+	.row
+		.col-xs-10
+			%ul.breadcrumb
+				%li
+					= link_to 'Admin', main_app.admin_index_path
+				%li
+					= link_to 'Experiment Admin',experiment_admin_index_path
+				%li
+					%strong
+						Edit
+						= @experiment.title
+		.col-xs-2
+
+
+	= form_for @experiment, url: experiment_admin_path( @experiment ) do |f|
+
+		.row
+			.col-xs-8
+				.form-group
+					= f.text_field :title, class: 'form-control input-lg'
+				.form-group
+					= f.label :description
+					= f.text_area :description, class: 'form-control wysiwyg', data: { wysiwyg: { height_min: 100, toolbar_sticky: true, toolbar_preset: 'admin_default' } }
+
+
+
+			.col-xs-4
+				.well
+					.form-group
+						= f.label :sample_type
+						= f.select :sample_type, [ '5050', 'weighted', 'random' ], {}, class: 'form-control'
+
+					.form-group
+						= f.label :max_trials
+						= f.text_field :max_trials, class: 'form-control'
+
+					.form-group
+						= f.label :start_at
+						= f.text_field :publish_at, value: current_user.to_local_tz( @experiment.start_at ), class: 'form-control datetimepicker'
+					.form-group
+						= f.label :end_at
+						= f.text_field :publish_at, value: current_user.to_local_tz( @experiment.end_at ), class: 'form-control datetimepicker'
+
+				
+					.form-group
+						= f.label :status
+						= f.collection_select :status, Edison::Experiment.statuses, :first, :first, {}, class: 'form-control'
+					
+					.form-group
+						= f.submit 'Update', class: 'btn btn-primary'

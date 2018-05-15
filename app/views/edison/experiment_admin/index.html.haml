@@ -9,7 +9,9 @@
 				%li
 					Experiemnts
 		.col-xs-2
-			
+			%a.btn.btn-success{ data: { toggle: :modal, target: '#new_experiment' } }
+				%i.fa.fa-plus-square
+				New
 	.row{ style: 'margin-top: 0' }
 		.col-xs-6
 			= raw paginate @experiments
@@ -27,9 +29,13 @@
 				%table.table.table-light.table-bordered
 					%thead
 						%th
-							
+							Title
 						%th
-
+							Status
+						%th
+							Start
+						%th
+							End
 
 					%tbody
 						- @experiments.each do |experiment|
@@ -39,8 +45,12 @@
 										= experiment.title
 								%td
 									= experiment.status
+								%td
+									= experiment.start_at
+								%td
+									= experiment.end_at
 
 								
 								
 								
-		
+= render 'new_modal'

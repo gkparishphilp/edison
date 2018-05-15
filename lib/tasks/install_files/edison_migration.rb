@@ -9,6 +9,12 @@ class EdisonMigration < ActiveRecord::Migration[5.1]
 
 			t.string 		:conversion_event
 
+			t.datetime 		:start_at
+			t.datetime 		:end_at
+			t.integer 		:max_trials
+
+			t.integer 		:status, 		default: 1
+
 			t.hstore 		:properties
 
 			t.timestamps
@@ -28,6 +34,8 @@ class EdisonMigration < ActiveRecord::Migration[5.1]
 
 			t.integer 		:cached_participant_count, 		default: 0
 			t.integer 		:cached_conversion_count, 		default: 0
+
+			t.boolean 		:is_control # default variant, shown if experiment expires, etc.
 
 			t.hstore		:properties
 
