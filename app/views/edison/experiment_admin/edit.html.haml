@@ -27,11 +27,63 @@
 
 
 
+				.col-xs-12
+					.well.white-well
+						%a.pull-right{ href: '#new_variant', data: { toggle: :modal, target: '#new_variant' } }
+							%i.fa.fa-plus
+							Add
+						%h4
+							Variants
+
+						%table.table.table-light.table-bordered{ style: 'margin:0;' }
+							%thead
+								%th 
+								%th Title
+								%th Participants
+								%th
+
+
+							- if @experiment.variants.empty?
+								%tr
+									%td{ colspan: 2 }
+										\- No Variants Found -
+							
+							- @experiment.variants.each do |variant|
+								%tr
+									%td
+										- if variant.is_control?
+											%i.fa.fa-check
+									%td
+										%a{ href: edit_variant_admin_path( variant ) }
+											= variant.title
+									%td
+										= variant.cached_participant_count
+
+
+									%td.text-center
+
+										%a.btn.btn-info.btn-xs{ href: edit_variant_admin_path( variant.id ) }
+											Edit
+										%a.btn.btn-danger.btn-xs{ href: variant_admin_path( variant.id ), data: { method: :delete, confirm: 'Are you sure?' } }
+											Trash
+
+
 			.col-xs-4
 				.well
 					.form-group
 						= f.label :sample_type
-						= f.select :sample_type, [ '5050', 'weighted', 'random' ], {}, class: 'form-control'
+						= f.select :sample_type, [ '5050', 'random' ], {}, class: 'form-control'
+						=# f.select :sample_type, [ '5050', 'weighted', 'random' ], {}, class: 'form-control'
+
+					.form-group
+						= f.label :variant_type
+						= f.select :variant_type, [ 'html', 'template', 'image' ], {}, class: 'form-control'
+						=# f.select :sample_type, [ '5050', 'weighted', 'random' ], {}, class: 'form-control'
+
+					.form-group
+						= f.label :conclusion_type, "When the music's over show the:"
+						= f.select :conclusion_type, [ 'control', 'winner', 'nothing' ], {}, class: 'form-control'
+						=# f.select :sample_type, [ '5050', 'weighted', 'random' ], {}, class: 'form-control'
 
 					.form-group
 						= f.label :max_trials
@@ -51,3 +103,6 @@
 					
 					.form-group
 						= f.submit 'Update', class: 'btn btn-primary'
+
+
+= render 'edison/variant_admin/new_modal', args: { experiment_id: @experiment.id } 

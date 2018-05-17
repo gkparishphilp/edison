@@ -1,0 +1,54 @@
+
+
+.container-fluid
+	.row
+		.col-xs-10
+			%ul.breadcrumb
+				%li
+					= link_to 'Admin', main_app.admin_index_path
+				%li
+					= link_to 'Experiment Admin',experiment_admin_index_path
+				%li
+					= link_to @variant.experiment.title, edit_experiment_admin_path( @variant.experiment )
+				%li
+					%strong
+						Edit
+						= @variant.title
+		.col-xs-2
+
+
+	= form_for @variant, url: variant_admin_path( @variant ) do |f|
+
+		.row
+			.col-xs-8
+				.form-group
+					= f.text_field :title, class: 'form-control input-lg'
+				
+
+
+				.form-group
+					= f.label :content
+					= f.text_area :content, class: 'form-control'
+
+
+
+				.form-group
+					= f.label :description
+					= f.text_area :description, class: 'form-control'
+					
+
+			.col-xs-4
+				.well
+
+					.form-group
+						= f.check_box :is_control
+						Control?
+				
+					.form-group
+						= f.label :status
+						= f.collection_select :status, Edison::Variant.statuses, :first, :first, {}, class: 'form-control'
+					
+					.form-group
+						= f.submit 'Update', class: 'btn btn-primary'
+
+

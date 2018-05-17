@@ -5,7 +5,11 @@ class EdisonMigration < ActiveRecord::Migration[5.1]
 			t.string		:title
 			t.string 		:slug
 			t.text 			:description
-			t.string		:sample_type, 	default: '5050'
+
+			t.string		:sample_type, 		default: '5050'
+			t.string 		:variant_type, 		default: 'html' # image, view
+			# what to show when test is over
+			t.string 		:conclusion_type, 	default: 'control' # winner, nothing
 
 			t.string 		:conversion_event
 
@@ -15,6 +19,8 @@ class EdisonMigration < ActiveRecord::Migration[5.1]
 
 			t.integer 		:status, 		default: 1
 
+			
+
 			t.hstore 		:properties
 
 			t.timestamps
@@ -22,11 +28,11 @@ class EdisonMigration < ActiveRecord::Migration[5.1]
 
 		
 		create_table :edison_variants, force: true do |t|
-			t.references	:edison_experiment
+			t.references	:experiment
 
 			t.string		:title
 			t.text 			:description
-			t.string 		:variant_type, 					default: 'html' # image
+			
 			t.float 		:weight, 						default: 1
 			t.text 			:content
 
@@ -44,9 +50,9 @@ class EdisonMigration < ActiveRecord::Migration[5.1]
 		
 
 		create_table :edison_trials, force: true do |t|
-			t.references 	:edison_experiment
-			t.references 	:edison_variant
-			t.references 	:bunyan_client
+			t.references 	:experiment
+			t.references 	:variant
+			t.references 	:client
 
 			t.timestamps
 		end

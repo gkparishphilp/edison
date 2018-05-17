@@ -1,21 +1,22 @@
-#new_experiment.modal.fade
+#new_variant.modal.fade
 	.modal-dialog
 		.modal-content
 			.modal-header
 				%button.close{ type: :button, 'data-dismiss' => 'modal', 'aria-hidden' => 'true' }
 					&times;
 				%h4.modal-title
-					New Experiment
-			= form_for Edison::Experiment.new, url: edison.experiment_admin_index_path do |f|
+					New Variant
+			= form_for Edison::Variant.new, url: edison.variant_admin_index_path do |f|
+				= f.hidden_field :experiment_id, value: args[:experiment_id]
 				.modal-body
 					.form-group
 						= f.label :title
 						= f.text_field :title, class: 'form-control'
 					.form-group
-						= f.label :description
-						= f.text_area :description, class: 'form-control'
+						= f.label :content
+						= f.text_area :content, class: 'form-control'
 
 				.modal-footer
 					%button.btn.btn-default{ type: :button, 'data-dismiss' => 'modal' }
 						Close
-					= f.submit 'Create', class: 'btn btn-primary'
+					= f.submit 'Add', class: 'btn btn-primary'
