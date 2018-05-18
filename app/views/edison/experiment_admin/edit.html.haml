@@ -40,6 +40,7 @@
 								%th 
 								%th Title
 								%th Participants
+								%th Conversions
 								%th
 
 
@@ -58,6 +59,8 @@
 											= variant.title
 									%td
 										= variant.cached_participant_count
+									%td
+										= variant.cached_conversion_count
 
 
 									%td.text-center
@@ -70,6 +73,11 @@
 
 			.col-xs-4
 				.well
+					.form-group
+						= f.label :conversion_event
+						= f.select :conversion_event, Bunyan.event_categories.keys, {}, class: 'form-control'
+						=# f.select :sample_type, [ '5050', 'weighted', 'random' ], {}, class: 'form-control'
+
 					.form-group
 						= f.label :sample_type
 						= f.select :sample_type, [ '5050', 'random' ], {}, class: 'form-control'

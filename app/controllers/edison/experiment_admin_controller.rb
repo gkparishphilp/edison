@@ -14,6 +14,12 @@ module Edison
 
 		def edit
 			@experiment = Experiment.friendly.find( params[:id] )
+
+			# just update the conversions here for now
+			@experiment.variants.each do |variant|
+				variant.cached_conversion_count = Bunyan::Event.where( name: @experiment.conversion_event ).where( client_id: variant.trials.pluck( :client_id) ).count
+				variant.save
+			end
 		end
 
 		def update
