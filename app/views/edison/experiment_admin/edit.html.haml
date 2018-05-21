@@ -41,12 +41,14 @@
 								%th Title
 								%th Participants
 								%th Conversions
+								%th Rate
+								%th Variance (95%)
 								%th
 
 
 							- if @experiment.variants.empty?
 								%tr
-									%td{ colspan: 2 }
+									%td{ colspan: 7 }
 										\- No Variants Found -
 							
 							- @experiment.variants.each do |variant|
@@ -60,7 +62,12 @@
 									%td
 										= variant.cached_participant_count
 									%td
-										= variant.cached_conversion_count
+										= variant.conversions
+									%td
+										= number_to_percentage( variant.conversion_rate * 100 )
+									%td
+										+/-
+										= number_to_percentage( variant.confidence_interval( confidence: '95' ) * 100 )
 
 
 									%td.text-center
@@ -86,11 +93,6 @@
 					.form-group
 						= f.label :variant_type
 						= f.select :variant_type, [ 'html', 'template', 'image' ], {}, class: 'form-control'
-						=# f.select :sample_type, [ '5050', 'weighted', 'random' ], {}, class: 'form-control'
-
-					.form-group
-						= f.label :conclusion_type, "When the music's over show the:"
-						= f.select :conclusion_type, [ 'control', 'winner', 'nothing' ], {}, class: 'form-control'
 						=# f.select :sample_type, [ '5050', 'weighted', 'random' ], {}, class: 'form-control'
 
 					.form-group

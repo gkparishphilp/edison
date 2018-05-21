@@ -7,7 +7,6 @@ class EdisonMigration < ActiveRecord::Migration[5.1]
 			t.text 			:description
 
 			t.string		:sample_type, 		default: '5050'
-			t.string 		:variant_type, 		default: 'html' # image, view
 			# what to show when test is over
 			t.string 		:conclusion_type, 	default: 'control' # winner, nothing
 
@@ -40,6 +39,9 @@ class EdisonMigration < ActiveRecord::Migration[5.1]
 
 			t.integer 		:cached_participant_count, 		default: 0
 			t.integer 		:cached_conversion_count, 		default: 0
+
+			t.integer 		:final_participant_count,		default: 0
+			t.integer 		:final_conversion_count,		default: 0
 
 			t.boolean 		:is_control # default variant, shown if experiment expires, etc.
 

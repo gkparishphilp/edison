@@ -9,6 +9,18 @@ module Edison
 				return ''
 			end
 
+			if ( experiment.trials.count > experiment.max_trials ) # || ( experiment.end_at >= Time.zone.now ) || not( experiemnt.active? )
+				# the music's over
+				if experiment.conclusion_type == 'control'
+					return experiment.variants.where( is_control: true ).last.content
+				elsif experiment.conclusion_type == 'winner'
+					return experiment.variants.order( cached_conversion_count: :desc ).first.content
+				else
+					return ''
+				end
+			end
+
+
 			client = Bunyan::Client.find_by( uuid: cookies[:clientuuid] )
 
 			# check if a trial exists for this client
