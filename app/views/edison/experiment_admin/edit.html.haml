@@ -37,21 +37,21 @@
 
 						%table.table.table-light.table-bordered{ style: 'margin:0;' }
 							%thead
-								%th 
+								%th
 								%th Title
 								%th Participants
 								%th Conversions
 								%th Rate
 								%th Variance (95%)
-								%th 
-								%th 
+								%th
+								%th
 
 
 							- if @experiment.variants.empty?
 								%tr
 									%td{ colspan: 7 }
 										\- No Variants Found -
-							
+
 							- @experiment.variants.each do |variant|
 								%tr
 									%td
@@ -70,13 +70,13 @@
 										- if variant == @control
 											Control
 										- else
-											= number_to_percentage( (variant.conversion_rate * 100) - ( @control.conversion_rate * 100 ) ) 
+											= number_to_percentage( (variant.conversion_rate * 100) - ( @control.conversion_rate * 100 ) )
 											- if variant.conversion_rate > @control.conversion_rate
 												better
 											- else
 												worse
 											than control
-									
+
 									%td
 										+/-
 										= number_to_percentage( variant.confidence_interval * 100 )
@@ -130,18 +130,18 @@
 
 					.form-group
 						= f.label :start_at
-						= f.text_field :publish_at, value: current_user.to_local_tz( @experiment.start_at ), class: 'form-control datetimepicker'
+						= f.text_field :start_at, value: current_user.to_local_tz( @experiment.start_at ), class: 'form-control datetimepicker'
 					.form-group
 						= f.label :end_at
-						= f.text_field :publish_at, value: current_user.to_local_tz( @experiment.end_at ), class: 'form-control datetimepicker'
+						= f.text_field :start_at, value: current_user.to_local_tz( @experiment.end_at ), class: 'form-control datetimepicker'
 
-				
+
 					.form-group
 						= f.label :status
 						= f.collection_select :status, Edison::Experiment.statuses, :first, :first, {}, class: 'form-control'
-					
+
 					.form-group
 						= f.submit 'Update', class: 'btn btn-primary'
 
 
-= render 'edison/variant_admin/new_modal', args: { experiment_id: @experiment.id } 
+= render 'edison/variant_admin/new_modal', args: { experiment_id: @experiment.id }
