@@ -14,11 +14,9 @@ class EdisonMigration < ActiveRecord::Migration[5.1]
 
 			t.datetime 		:start_at
 			t.datetime 		:end_at
-			t.integer 		:max_trials
+			t.integer 		:max_trials, 		default: 0
 
-			t.integer 		:status, 		default: 1
-
-			
+			t.integer 		:status, 			default: 1
 
 			t.hstore 		:properties
 

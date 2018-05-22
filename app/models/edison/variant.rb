@@ -9,9 +9,13 @@ module Edison
 		has_many		:trials
 
 
+		def self.control
+			where( is_control: true ).first
+		end
+
 
 		def confidence_interval( opts={} )
-			return 'N/A' if self.trials.empty?
+			return 0 if self.trials.empty?
 
 			opts[:confidence] = opts[:confidence].to_s
 
@@ -23,14 +27,14 @@ module Edison
 
 
 		def conversion_rate( opts={} )
-			return 'N/A' if self.trials.empty?
+			return 0 if self.trials.empty?
 			total_conversions = self.conversions( opts )
 			return ( total_conversions.to_f / self.trials.count.to_f )
 		end
 
 
 		def conversions( opts={} )
-			return 'N/A' if self.trials.empty?
+			return 0 if self.trials.empty?
 			event = opts[:event] || opts[:for] || self.experiment.conversion_event
 
 			path = opts[:path] || opts[:page] || opts[:page_path]
@@ -49,6 +53,7 @@ module Edison
 			conversions = conversions.count
 			
 		end
+
 
 
 		def participants

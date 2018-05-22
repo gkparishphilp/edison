@@ -43,7 +43,8 @@
 								%th Conversions
 								%th Rate
 								%th Variance (95%)
-								%th
+								%th 
+								%th 
 
 
 							- if @experiment.variants.empty?
@@ -65,9 +66,31 @@
 										= variant.conversions
 									%td
 										= number_to_percentage( variant.conversion_rate * 100 )
+										%br
+										- if variant == @control
+											Control
+										- else
+											= number_to_percentage( (variant.conversion_rate * 100) - ( @control.conversion_rate * 100 ) ) 
+											- if variant.conversion_rate > @control.conversion_rate
+												better
+											- else
+												worse
+											than control
+									
 									%td
 										+/-
-										= number_to_percentage( variant.confidence_interval( confidence: '95' ) * 100 )
+										= number_to_percentage( variant.confidence_interval * 100 )
+
+
+									%td
+										= (( variant.conversions - @control.conversions ).abs * 0.5 ) ** 2
+										- if (( variant.conversions - @control.conversions ).abs * 0.5 ) ** 2 < @experiment.trials.count
+											Insignificant
+										- elsif (( variant.conversions - @control.conversions ).abs * 0.5 ) ** 2 < 2 * @experiment.trials.count
+											Exremely Significant
+										- else
+											Significant
+
 
 
 									%td.text-center
@@ -76,6 +99,11 @@
 											Edit
 										%a.btn.btn-danger.btn-xs{ href: variant_admin_path( variant.id ), data: { method: :delete, confirm: 'Are you sure?' } }
 											Trash
+							%tr
+								%td{ colspan: 2 }
+								%td
+									= @experiment.trials.count
+								%td{ colspan:  5}
 
 
 			.col-xs-4
@@ -90,9 +118,10 @@
 						= f.select :sample_type, [ '5050', 'random' ], {}, class: 'form-control'
 						=# f.select :sample_type, [ '5050', 'weighted', 'random' ], {}, class: 'form-control'
 
+
 					.form-group
-						= f.label :variant_type
-						= f.select :variant_type, [ 'html', 'template', 'image' ], {}, class: 'form-control'
+						= f.label :conclusion_type, "When the music's over show the:"
+						= f.select :conclusion_type, [ 'control', 'winner', 'nothing' ], {}, class: 'form-control'
 						=# f.select :sample_type, [ '5050', 'weighted', 'random' ], {}, class: 'form-control'
 
 					.form-group

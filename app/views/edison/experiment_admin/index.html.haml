@@ -31,6 +31,10 @@
 						%th
 							Title
 						%th
+							Variants
+						%th
+							Trials
+						%th
 							Status
 						%th
 							Start
@@ -43,6 +47,10 @@
 								%td
 									%a{ href: edit_experiment_admin_path( experiment ) }
 										= experiment.title
+								%td
+									= experiment.variants.count
+								%td
+									= experiment.trials.count
 								%td
 									= experiment.status
 								%td

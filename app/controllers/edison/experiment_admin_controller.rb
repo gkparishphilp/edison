@@ -14,6 +14,7 @@ module Edison
 
 		def edit
 			@experiment = Experiment.friendly.find( params[:id] )
+			@control = @experiment.variants.control
 
 		end
 
