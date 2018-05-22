@@ -9,7 +9,7 @@ module Edison
 				return ''
 			end
 
-			if experiment.concluded? || not( experiment.active? )
+			if experiment.started? && experiment.concluded?
 				# the music's over
 				if experiment.conclusion_type == 'control'
 					return experiment.variants.where( is_control: true ).last.content
@@ -18,6 +18,8 @@ module Edison
 				else
 					return ''
 				end
+			elsif not( experiment.active? ) || not( experiment.started? )
+				return ''
 			end
 
 

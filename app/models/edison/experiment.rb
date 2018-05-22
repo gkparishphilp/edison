@@ -25,6 +25,11 @@ module Edison
 			self.max_trials.present? && self.trials.count > self.max_trials
 		end
 
+		def started?( args = {} )
+			args[:now] ||= Time.zone.now
+			self.started_at.present? && self.started_at >= args[:now]
+		end
+
 	end
 
 end
