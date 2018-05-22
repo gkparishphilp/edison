@@ -9,7 +9,7 @@ module Edison
 				return ''
 			end
 
-			if ( experiment.trials.count > experiment.max_trials ) # || ( experiment.end_at >= Time.zone.now ) || not( experiemnt.active? )
+			if experiment.concluded? || not( experiment.active? )
 				# the music's over
 				if experiment.conclusion_type == 'control'
 					return experiment.variants.where( is_control: true ).last.content
