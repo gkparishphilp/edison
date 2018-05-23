@@ -16,7 +16,7 @@ module Edison
 				if experiment.conclusion_type == 'control'
 					return experiment.variants.where( is_control: true ).last.content
 				elsif experiment.conclusion_type == 'winner'
-					return experiment.variants.order( cached_conversion_count: :desc ).first.content
+					return experiment.variants.active.order( cached_conversion_count: :desc ).first.content
 				else
 					return options[:default]
 				end
