@@ -37,7 +37,7 @@ module Edison
 			return 0 if self.trials.empty?
 			event = opts[:event] || opts[:for] || self.experiment.conversion_event
 
-			path = opts[:path] || opts[:page] || opts[:page_path] || self.conversion_path
+			path = opts[:path] || opts[:page] || opts[:page_path] || self.experiment.conversion_path
 
 			uniq = !!opts.fetch( :uniq, true )
 
@@ -46,7 +46,7 @@ module Edison
 			# only include conversions from when the experiemnt actually started
 			conversions = conversions.where( "created_at > :t", t: self.trials.minimum( :created_at ) )
 
-			conversions = conversions.where( page_path: self.conversion_path ) if event == 'pageview' && self.conversion_path.present?
+			conversions = conversions.where( page_path: path ) if event == 'pageview' && path.present?
 
 			conversions = conversions.distinct if uniq
 
