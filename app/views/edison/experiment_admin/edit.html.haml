@@ -114,6 +114,10 @@
 						=# f.select :sample_type, [ '5050', 'weighted', 'random' ], {}, class: 'form-control'
 
 					.form-group
+						= f.label :conversion_path
+						= f.text_field :conversion_path, class: 'form-control'
+
+					.form-group
 						= f.label :sample_type
 						= f.select :sample_type, [ '5050', 'random' ], {}, class: 'form-control'
 						=# f.select :sample_type, [ '5050', 'weighted', 'random' ], {}, class: 'form-control'

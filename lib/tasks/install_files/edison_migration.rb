@@ -11,6 +11,7 @@ class EdisonMigration < ActiveRecord::Migration[5.1]
 			t.string 		:conclusion_type, 	default: 'control' # winner, nothing
 
 			t.string 		:conversion_event
+			t.string 		:conversion_path
 
 			t.datetime 		:start_at
 			t.datetime 		:end_at
