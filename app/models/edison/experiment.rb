@@ -27,7 +27,7 @@ module Edison
 
 		def started?( args = {} )
 			args[:now] ||= Time.zone.now
-			self.started_at.present? && self.started_at >= args[:now]
+			self.start_at.present? && self.start_at >= args[:now]
 		end
 
 	end
