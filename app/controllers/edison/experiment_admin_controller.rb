@@ -4,6 +4,10 @@ module Edison
 
 		def create
 			@experiment = Experiment.new( experiment_params )
+			
+			@experiment.start_at ||= Time.zone.now
+			@experiment.end_at ||= @experiment.start_at + 1.month
+
 			@experiment.save
 			redirect_to edit_experiment_admin_path( @experiment )
 		end
