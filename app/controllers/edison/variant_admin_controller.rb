@@ -3,8 +3,8 @@ module Edison
 
 		def create
 			@variant = Variant.new( variant_params )
-			
-			if Variant.where( experiment_id: @variant.experiment_id ).count == 0 
+
+			if Variant.where( experiment_id: @variant.experiment_id ).count == 0
 				@variant.is_control = true
 			end
 
@@ -26,7 +26,11 @@ module Edison
 			@variant = Variant.find( params[:id] )
 			@variant.update( variant_params )
 
-			Variant.where.not( id: @variant.id ).update_all( is_control: false ) if @variant.is_control?
+			if @variant.errors.present?
+				set_flash @variant.errors.full_messages, :danger
+			else
+				Variant.where.not( id: @variant.id ).update_all( is_control: false ) if @variant.is_control?
+			end
 
 			redirect_back( fallback_location: '/admin' )
 		end
@@ -36,6 +40,6 @@ module Edison
 			def variant_params
 				params.require( :variant ).permit( :experiment_id, :title, :description, :content, :status, :is_control )
 			end
-		
+
 	end
 end

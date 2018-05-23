@@ -1,23 +1,29 @@
 module Edison
 	module ApplicationHelper
 
-		def edison_run_experiment( exp_id )
+		def edison_run_experiment( exp_id, options = {} )
+			options[:default] = '' unless options.has_key? :default
 
 			begin
 				experiment = Experiment.friendly.find( exp_id )
 			rescue ActiveRecord::RecordNotFound
-				return ''
+				return options[:default]
 			end
 
-			if ( experiment.trials.count > experiment.max_trials ) # || ( experiment.end_at >= Time.zone.now ) || not( experiemnt.active? )
+			if experiment.started? && experiment.concluded?
+
 				# the music's over
 				if experiment.conclusion_type == 'control'
 					return experiment.variants.where( is_control: true ).last.content
 				elsif experiment.conclusion_type == 'winner'
-					return experiment.variants.order( cached_conversion_count: :desc ).first.content
+					return experiment.variants.active.order( cached_conversion_count: :desc ).first.content
 				else
-					return ''
+					return options[:default]
 				end
+
+			elsif not( experiment.active? ) || not( experiment.started? )
+				# the music hasn't started yet
+				return options[:default]
 			end
 
 

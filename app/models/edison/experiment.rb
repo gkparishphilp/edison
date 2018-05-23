@@ -12,7 +12,24 @@ module Edison
 		include FriendlyId
 		friendly_id :title, use: :slugged
 
-		
+		def concluded?
+			self.has_max_trials? || self.has_expired?
+		end
+
+		def has_expired?( args = {} )
+			args[:now] ||= Time.zone.now
+			self.end_at.present? && self.end_at >= args[:now]
+		end
+
+		def has_max_trials?
+			self.max_trials.present? && self.trials.count > self.max_trials
+		end
+
+		def started?( args = {} )
+			args[:now] ||= Time.zone.now
+			self.started_at.present? && self.started_at >= args[:now]
+		end
+
 	end
-	
+
 end
