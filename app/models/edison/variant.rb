@@ -8,6 +8,8 @@ module Edison
 
 		has_many		:trials
 
+		validate :is_control_toggle
+
 
 		def self.control
 			where( is_control: true ).first
@@ -51,7 +53,7 @@ module Edison
 			conversions = conversions.distinct if uniq
 
 			conversions = conversions.count
-			
+
 		end
 
 
@@ -59,7 +61,15 @@ module Edison
 		def participants
 			Bunyan::Client.where( id: self.trials.pluck( :client_id ) )
 		end
-		
+
+		protected
+
+		def is_control_toggle
+			if not( self.is_control? ) && self.is_control_changed? && self.experiment.variants.where( is_control: true ).where.not( id: self.id ).count == 0
+				self.errors.add( :is_control, "can't be delesected, another must be activated first." )
+			end
+		end
+
 	end
-	
+
 end
