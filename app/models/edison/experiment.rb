@@ -18,7 +18,7 @@ module Edison
 
 		def has_expired?( args = {} )
 			args[:now] ||= Time.zone.now
-			self.end_at.present? && self.end_at >= args[:now]
+			self.end_at.present? && args[:now] >= self.end_at
 		end
 
 		def has_max_trials?
