@@ -83,13 +83,16 @@
 
 
 									%td
-										= (( variant.conversions - @control.conversions ).abs * 0.5 ) ** 2
-										- if (( variant.conversions - @control.conversions ).abs * 0.5 ) ** 2 < @experiment.trials.count
-											Insignificant
-										- elsif (( variant.conversions - @control.conversions ).abs * 0.5 ) ** 2 < 2 * @experiment.trials.count
-											Exremely Significant
+										- if variant == @control
+											Control
 										- else
-											Significant
+											= (( variant.conversions - @control.conversions ).abs * 0.5 ) ** 2
+											- if (( variant.conversions - @control.conversions ).abs * 0.5 ) ** 2 < @experiment.trials.count
+												Insignificant
+											- elsif (( variant.conversions - @control.conversions ).abs * 0.5 ) ** 2 < 2 * @experiment.trials.count
+												Exremely Significant
+											- else
+												Significant
 
 
 
