@@ -65,9 +65,16 @@ module Edison
 		protected
 
 		def is_control_toggle
-			if not( self.is_control? ) && self.is_control_changed? && self.experiment.variants.where( is_control: true ).where.not( id: self.id ).count == 0
-				self.errors.add( :is_control, "can't be delesected, another must be activated first." )
+			if not( self.is_control? ) && self.is_control_changed? && self.experiment.variants.active.where( is_control: true ).where.not( id: self.id ).count == 0
+				self.errors.add( :is_control, "can't be delesected.  To deselect a variant as control you must toggle it to a different variant." )
 			end
+
+			if self.is_control? && self.status_changed? && not( self.active? )
+				self.errors.add( :status, "can't be non-active when set as control.  To change the status select another variant as control first." )
+			elsif self.is_control? && not( self.active? )
+				self.errors.add( :is_control, "can't be selected for a non-active variant." )
+			end
+
 		end
 
 	end
