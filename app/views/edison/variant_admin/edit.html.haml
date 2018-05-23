@@ -43,7 +43,7 @@
 					.form-group
 						- if @variant.is_control?
 							= check_box_tag 'readonly', 'readonly', true, readonly: true, disabled: true
-							= f.hidden :is_control
+							= f.hidden_field :is_control
 						- else
 							= f.check_box :is_control
 						Control?
