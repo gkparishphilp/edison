@@ -21,7 +21,7 @@ module Edison
 
 			opts[:confidence] = opts[:confidence].to_s
 
-			opts[:confidence] ||= '95' # 95% confidence
+			opts[:confidence] ||= '90' # 90% confidence
 			confidence_factors = { '67' => 1, '75' => 1.15, '80' => 1.28, '90' => 1.645, '95' => 1.96, '99' => 2.575, '999' => 5 }
 			confidence = confidence_factors[ opts[:confidence] ] || 1.96
 			return Math.sqrt( self.conversion_rate( opts ) * ( 1 - self.conversion_rate( opts ) ) / self.trials.count ) * confidence
