@@ -46,7 +46,12 @@ module Edison
 			conversions = Bunyan::Event.where( name: event ).where( client_id: self.participants )
 
 			# only include conversions from when the experiemnt actually started
-			conversions = conversions.where( "created_at > :t", t: self.trials.minimum( :created_at ) )
+			conversions = conversions.where( "created_at >= :t", t: self.trials.minimum( :created_at ) )
+			
+			if self.experiment.has_expired?
+				# only include conversions from before the experiemnt ended
+				conversions = conversions.where( "created_at <= :t", t: self.experiment.ended_at )
+			end
 
 			conversions = conversions.where( page_path: path ) if event == 'pageview' && path.present?
 

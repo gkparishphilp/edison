@@ -13,7 +13,15 @@ module Edison
 		friendly_id :title, use: :slugged
 
 		def concluded?
-			self.has_max_trials? || self.has_expired?
+			if self.has_expired?
+				return true
+			end
+
+			if self.has_max_trials?
+				self.end_at = Time.zone.now
+				self.save
+				return true
+			end
 		end
 
 		def has_expired?( args = {} )
