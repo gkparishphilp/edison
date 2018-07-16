@@ -4,11 +4,28 @@ module Edison
 		def edison_run_experiment( exp_id, options = {} )
 			options[:default] = '' unless options.has_key? :default
 
+			
+
 			begin
 				experiment = Experiment.friendly.find( exp_id )
 			rescue ActiveRecord::RecordNotFound
 				return options[:default]
 			end
+
+			# option to force a variant
+			# will return the variant whether or not experiment is active
+			# client will not be put into the trial pool
+			force_var = options.delete( :force_var )
+			if force_var.present?
+				if force_var == 'control'
+					return experiment.variants.where( is_control: true ).last.content
+				end
+				var = experiment.variants.find_by( id: force_var )
+				if var.present?
+					return var.content
+				end
+			end
+			# if force_var is invalid, method should coninute as normally.....
 
 			if experiment.started? && experiment.concluded?
 
