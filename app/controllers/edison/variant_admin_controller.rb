@@ -29,7 +29,7 @@ module Edison
 			if @variant.errors.present?
 				set_flash @variant.errors.full_messages, :danger
 			else
-				Variant.where.not( id: @variant.id ).update_all( is_control: false ) if @variant.is_control?
+				@variant.experiment.variants.where.not( id: @variant.id ).update_all( is_control: false ) if @variant.is_control?
 			end
 
 			redirect_back( fallback_location: '/admin' )
