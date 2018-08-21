@@ -47,10 +47,10 @@ module Edison
 
 			# only include conversions from when the experiemnt actually started
 			conversions = conversions.where( "created_at >= :t", t: self.trials.minimum( :created_at ) )
-			
+
 			if self.experiment.has_expired?
 				# only include conversions from before the experiemnt ended
-				conversions = conversions.where( "created_at <= :t", t: self.experiment.ended_at )
+				conversions = conversions.where( "created_at <= :t", t: self.experiment.end_at )
 			end
 
 			conversions = conversions.where( page_path: path ) if event == 'pageview' && path.present?
