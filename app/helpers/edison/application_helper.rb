@@ -27,7 +27,12 @@ module Edison
 			end
 			# if force_var is invalid, method should coninute as normally.....
 
-			if experiment.started? && experiment.concluded?
+			client = Bunyan::Client.find_by( uuid: cookies[:clientuuid] )
+
+			# check if a trial exists for this client
+			trial = experiment.trials.where( client_id: client.id ).last
+
+			if trial.nil? && ( experiment.started? && experiment.concluded? )
 
 				# the music's over
 				if experiment.conclusion_type == 'control'
@@ -38,16 +43,10 @@ module Edison
 					return options[:default]
 				end
 
-			elsif not( experiment.active? ) || not( experiment.started? )
+			elsif trial.nil? && ( not( experiment.active? ) || not( experiment.started? ) )
 				# the music hasn't started yet
 				return options[:default]
 			end
-
-
-			client = Bunyan::Client.find_by( uuid: cookies[:clientuuid] )
-
-			# check if a trial exists for this client
-			trial = experiment.trials.where( client_id: client.id ).last
 
 			# create one if not - this will assign the client to a variant
 			trial ||= Trial.create( experiment_id: experiment.id, client_id: client.id )
