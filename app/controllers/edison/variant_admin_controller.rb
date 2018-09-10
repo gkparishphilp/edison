@@ -1,5 +1,5 @@
 module Edison
-	class VariantAdminController < SwellMedia::AdminController
+	class VariantAdminController < ApplicationAdminController
 
 		def create
 			@variant = Variant.new( variant_params )

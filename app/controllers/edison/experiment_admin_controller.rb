@@ -1,10 +1,10 @@
 module Edison
-	class ExperimentAdminController < SwellMedia::AdminController
+	class ExperimentAdminController < ApplicationAdminController
 
 
 		def create
 			@experiment = Experiment.new( experiment_params )
-			
+
 			@experiment.start_at ||= Time.zone.now
 			@experiment.end_at ||= @experiment.start_at + 1.month
 
