@@ -27,10 +27,14 @@ module Edison
 			end
 			# if force_var is invalid, method should coninute as normally.....
 
-			client = Bunyan::Client.find_by( uuid: cookies[:clientuuid] )
+			client_id = Bunyan::Client.find_by( uuid: cookies[:clientuuid] ).try( :id )
+
+			if client_id.nil?
+				return options[:default]
+			end
 
 			# check if a trial exists for this client
-			trial = experiment.trials.where( client_id: client.id ).last
+			trial = experiment.trials.where( client_id: client_id ).last
 
 			if trial.nil? && ( experiment.started? && experiment.concluded? )
 
@@ -49,7 +53,7 @@ module Edison
 			end
 
 			# create one if not - this will assign the client to a variant
-			trial ||= Trial.create( experiment_id: experiment.id, client_id: client.id )
+			trial ||= Trial.create( experiment_id: experiment.id, client_id: client_id )
 
 			# method should return the correct variant content ro be rendered as html
 			variant = trial.generate_variant
