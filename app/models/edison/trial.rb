@@ -29,7 +29,7 @@ module Edison
 			when '5050'
 				self.variant = self.experiment.variants.active.order( cached_participant_count: :asc ).first
 			else # random
-				self.variant = self.experiment.variants.active.order( "random()" ).first
+				self.variant = self.experiment.variants.active.order( Arel.sql("random()") ).first
 			end
 
 			self.save
