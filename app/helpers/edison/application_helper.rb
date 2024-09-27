@@ -4,7 +4,7 @@ module Edison
 		def edison_run_experiment( exp_id, options = {} )
 			options[:default] = '' unless options.has_key? :default
 
-			
+			variant = nil
 
 			begin
 				experiment = Experiment.friendly.find( exp_id )
@@ -17,13 +17,8 @@ module Edison
 			# client will not be put into the trial pool
 			force_var = options.delete( :force_var )
 			if force_var.present?
-				if force_var == 'control'
-					return experiment.variants.where( is_control: true ).last.content
-				end
-				var = experiment.variants.find_by( id: force_var )
-				if var.present?
-					return var.content
-				end
+				variant = experiment.variants.where( is_control: true ).last if force_var == 'control'
+				variant ||= experiment.variants.find_by( id: force_var )
 			end
 			# if force_var is invalid, method should coninute as normally.....
 
@@ -55,8 +50,12 @@ module Edison
 			# create one if not - this will assign the client to a variant
 			trial ||= Trial.create( experiment_id: experiment.id, client_id: client_id )
 
-			# method should return the correct variant content ro be rendered as html
-			variant = trial.generate_variant
+			if variant.present?
+				trial.update( variant: variant )
+			else
+				# method should return the correct variant content ro be rendered as html
+				variant = trial.generate_variant
+			end
 
 			return variant.content
 
