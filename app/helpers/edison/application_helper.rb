@@ -51,6 +51,8 @@ module Edison
 			trial ||= Trial.create( experiment_id: experiment.id, client_id: client_id )
 
 			if variant.present?
+				trial.variant.decrement!( :cached_participant_count ) if trial.variant.present?
+				variant.increment!( :cached_participant_count )
 				trial.update( variant: variant )
 			else
 				# method should return the correct variant content ro be rendered as html
