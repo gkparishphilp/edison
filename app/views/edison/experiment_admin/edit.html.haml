@@ -143,8 +143,9 @@
 					.form-group
 						= f.label :end_at
 						= f.text_field :end_at, value: current_user.to_local_tz( @experiment.end_at ), class: 'form-control datetimepicker'
-
-
+					.form-group
+						= f.label :conversion_window_days, "Conversion Window (days)"
+						= f.number_field :conversion_window_days, class: 'form-control', min: 0, step: 1
 					.form-group
 						= f.label :status
 						= f.collection_select :status, Edison::Experiment.statuses, :first, :first, {}, class: 'form-control'

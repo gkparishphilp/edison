@@ -38,8 +38,7 @@ module Edison
 		private
 
 			def variant_params
-				params.require( :variant ).permit( :experiment_id, :title, :description, :content, :status, :is_control )
+				params.require( :variant ).permit( :experiment_id, :title, :description, :content, :status, :is_control, :gross_margin, :cost_of_acquiring_customers )
 			end
-
 	end
 end

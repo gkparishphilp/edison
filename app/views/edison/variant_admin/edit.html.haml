@@ -35,7 +35,12 @@
 				.form-group
 					= f.label :description
 					= f.text_area :description, class: 'form-control'
-
+				.form-group
+					= f.label :gross_margin, "Gross Margin (multiplier)"
+					= f.number_field :gross_margin, class: 'form-control', step: 0.01
+				.form-group
+					= f.label :cost_of_acquiring_customers, "Cost of Aqauiring Customers (cents)"
+					= f.number_field :cost_of_acquiring_customers, class: 'form-control', step: 1
 
 			.col-xs-4
 				.well

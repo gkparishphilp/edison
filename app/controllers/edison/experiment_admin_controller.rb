@@ -33,7 +33,7 @@ module Edison
 
 		private
 			def experiment_params
-				params.require( :experiment ).permit( :title, :description, :sample_type, :conclusion_type, :conversion_event, :conversion_path, :start_at, :end_at, :max_trials, :status )
+				params.require( :experiment ).permit( :title, :description, :sample_type, :conclusion_type, :conversion_event, :conversion_path, :start_at, :end_at, :max_trials, :status, :conversion_window_days )
 			end
 	end
 end
