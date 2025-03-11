@@ -4,7 +4,7 @@ module Edison
 
 		enum status: { 'archive' => -1, 'draft' => 0, 'active' => 1 }
 
-
+		has_many	:experiment_url_patterns
 
 		has_many	:variants
 		has_many 	:trials, through: :variants#, source: :trial

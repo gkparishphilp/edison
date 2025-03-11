@@ -111,6 +111,33 @@
 								%td{ colspan:  5}
 
 
+					.well.white-well
+						%a.pull-right{ href: '#new_experiment_url_pattern', data: { toggle: :modal, target: '#new_experiment_url_pattern' } }
+							%i.fa.fa-plus
+							Add
+						%h4
+							URL Patterns
+
+						%table.table.table-light.table-bordered{ style: 'margin:0;' }
+							%thead
+								%th URL Pattern
+								%th
+
+
+							- if @experiment.experiment_url_patterns.empty?
+								%tr
+									%td{ colspan: 2 }
+										\- No URL Patterns Found -
+
+							- @experiment.experiment_url_patterns.each do |experiment_url_pattern|
+								%tr
+									%td
+										= experiment_url_pattern.url_pattern
+									%td
+										%a.btn.btn-danger.btn-xs{ href: experiment_url_pattern_admin_path( experiment_url_pattern.id ), data: { method: :delete, confirm: 'Are you sure?' } }
+											Trash
+
+
 			.col-xs-4
 				.well
 					.form-group
@@ -155,3 +182,4 @@
 
 
 = render 'edison/variant_admin/new_modal', args: { experiment_id: @experiment.id }
+= render 'edison/experiment_url_pattern_admin/new_modal', args: { experiment_id: @experiment.id }

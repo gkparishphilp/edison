@@ -1,0 +1,19 @@
+#new_experiment_url_pattern.modal.fade
+	.modal-dialog
+		.modal-content
+			.modal-header
+				%button.close{ type: :button, 'data-dismiss' => 'modal', 'aria-hidden' => 'true' }
+					&times;
+				%h4.modal-title
+					New URL Pattern
+			= form_for Edison::ExperimentUrlPattern.new, url: edison.experiment_url_pattern_admin_index_path do |f|
+				= f.hidden_field :experiment_id, value: args[:experiment_id]
+				.modal-body
+					.form-group
+						= f.label :url_pattern
+						= f.text_field :url_pattern, class: 'form-control'
+
+				.modal-footer
+					%button.btn.btn-default{ type: :button, 'data-dismiss' => 'modal' }
+						Close
+					= f.submit 'Create', class: 'btn btn-primary'
