@@ -6,6 +6,8 @@ module Edison
 
 			variant = nil
 
+			is_forced = false
+
 			begin
 				experiment = Experiment.friendly.find( exp_id )
 			rescue ActiveRecord::RecordNotFound
@@ -19,6 +21,8 @@ module Edison
 			if force_var.present?
 				variant = experiment.variants.where( is_control: true ).last if force_var == 'control'
 				variant ||= experiment.variants.find_by( id: force_var )
+
+				is_forced = variant.present?
 			end
 			# if force_var is invalid, method should coninute as normally.....
 
@@ -48,7 +52,22 @@ module Edison
 			end
 
 			# create one if not - this will assign the client to a variant
-			trial ||= Trial.create( experiment_id: experiment.id, client_id: client_id )
+			if trial.blank?
+				trial = Trial.new(
+					experiment_id: experiment.id,
+					client_id: client_id
+				)
+				trial.created_url = request.url if trial.respond_to?(:created_url)
+				trial.is_forced = is_forced if trial.respond_to?(:is_forced)
+				trial.save
+			end
+
+			# if a force var has been requested for this trial, mark it as so
+			if trial.respond_to?(:is_forced) && is_forced && !trial.is_forced
+				trial.is_forced = is_forced
+				trial.save
+			end
+
 
 			if variant.present?
 				trial.variant.decrement!( :cached_participant_count ) if trial.variant.present?
