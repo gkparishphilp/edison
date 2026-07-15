@@ -49,12 +49,18 @@
 								%th
 
 
+							- total_trials = @experiment.trials.count
+							- control_conversions = @control ? @control.conversions : 0
+							- control_rate = @control ? @control.conversion_rate : 0
+
 							- if @experiment.variants.empty?
 								%tr
 									%td{ colspan: 7 }
 										\- No Variants Found -
 
 							- @experiment.variants.each do |variant|
+								- v_conversions = variant.conversions
+								- v_rate = variant.conversion_rate
 								%tr
 									%td
 										- if variant.is_control?
@@ -65,15 +71,15 @@
 									%td
 										= variant.cached_participant_count
 									%td
-										= variant.conversions
+										= v_conversions
 									%td
-										= number_to_percentage( variant.conversion_rate * 100 )
+										= number_to_percentage( v_rate * 100 )
 										%br
 										- if variant == @control
 											Control
 										- else
-											= number_to_percentage( (variant.conversion_rate * 100) - ( @control.conversion_rate * 100 ) )
-											- if variant.conversion_rate > @control.conversion_rate
+											= number_to_percentage( (v_rate * 100) - ( control_rate * 100 ) )
+											- if v_rate > control_rate
 												better
 											- else
 												worse
@@ -81,17 +87,18 @@
 
 									%td
 										+/-
-										= number_to_percentage( variant.confidence_interval * 100 )
+										= number_to_percentage( variant.confidence_interval * 100 ) rescue 'ERROR'
 
 
 									%td
 										- if variant == @control
 											Control
 										- else
-											= (( variant.conversions - @control.conversions ).abs * 0.5 ) ** 2
-											- if (( variant.conversions - @control.conversions ).abs * 0.5 ) ** 2 < @experiment.trials.count
+											- chi_square = (( v_conversions - control_conversions ).abs * 0.5 ) ** 2
+											= chi_square
+											- if chi_square < total_trials
 												Insignificant
-											- elsif (( variant.conversions - @control.conversions ).abs * 0.5 ) ** 2 < 2 * @experiment.trials.count
+											- elsif chi_square < 2 * total_trials
 												Exremely Significant
 											- else
 												Significant
@@ -107,7 +114,7 @@
 							%tr
 								%td{ colspan: 2 }
 								%td
-									= @experiment.trials.count
+									= total_trials
 								%td{ colspan:  5}
 
 
