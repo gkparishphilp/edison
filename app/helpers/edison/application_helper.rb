@@ -33,7 +33,7 @@ module Edison
 			end
 
 			# check if a trial exists for this client
-			trial = experiment.trials.where( client_id: client_id ).last
+			trial = Trial.for_client( experiment, client_id )
 
 			if trial.nil? && ( experiment.started? && experiment.concluded? )
 
@@ -51,15 +51,13 @@ module Edison
 				return options[:default]
 			end
 
-			# create one if not - this will assign the client to a variant
+			# create one if not - this will assign the client to a variant, exactly
+			# once even when concurrent requests race to enroll the same client
 			if trial.blank?
-				trial = Trial.new(
-					experiment_id: experiment.id,
-					client_id: client_id
-				)
-				trial.created_url = request.url if trial.respond_to?(:created_url)
-				trial.is_forced = is_forced if trial.respond_to?(:is_forced)
-				trial.save
+				attributes = { variant: variant }
+				attributes[:created_url] = request.url if Trial.column_names.include?('created_url')
+				attributes[:is_forced] = is_forced if Trial.column_names.include?('is_forced')
+				trial, _created = Trial.enroll( experiment, client_id, attributes )
 			end
 
 			# if a force var has been requested for this trial, mark it as so
@@ -69,14 +67,16 @@ module Edison
 			end
 
 
-			if variant.present?
+			if variant.present? && trial.variant_id != variant.id
 				trial.variant.decrement!( :cached_participant_count ) if trial.variant.present?
 				variant.increment!( :cached_participant_count )
 				trial.update( variant: variant )
-			else
+			elsif variant.nil?
 				# method should return the correct variant content ro be rendered as html
 				variant = trial.generate_variant
 			end
+
+			return options[:default] if variant.nil?
 
 			return variant.content
 
